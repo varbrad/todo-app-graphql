@@ -16,3 +16,4 @@ typings
 .nuxt
 dist
 .vagrant
+vendor
