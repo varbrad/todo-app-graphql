@@ -11,35 +11,53 @@ use GraphQL\Type\Definition\Type;
 
 use API\DB\Database;
 
+$userType = new ObjectType([
+  'name' => 'User',
+  'description' => 'A user',
+  'fields' => [
+    'id' => Type::int(),
+    'username' => Type::string()
+  ]
+]);
+
+$listType = new ObjectType([
+  'name' => 'List',
+  'description' => 'A todo list',
+  'fields' => [
+    'id' => Type::int(),
+    'title' => Type::string(),
+    'user' => [
+      'type' => $userType,
+      'resolve' => function ($value, $args, $root) {
+        return $root['db']->getUser($value['user']);
+      }
+    ]
+  ]
+]);
+
 $queryType = new ObjectType([
   'name' => 'Query',
   'fields' => [
-    // 'echo' => [
-    //   'type' => Type::string(),
-    //   'args' => [
-    //     'message' => Type::nonNull(Type::string())
-    //   ],
-    //   'resolve' => function ($root, $args) {
-    //     return $root['prefix'] . $args['message'];
-    //   }
-    // ]
-    // 'random' => [
-    //   'type' => Type::int(),
-    //   'args' => [
-    //     'min' => Type::int(),
-    //     'max' => Type::int()
-    //   ],
-    //   'resolve' => function ($root, $args) {
-    //     return $args['min'] ?: 0 + $args['max'] ?: 0;
-    //   }
-    // ]
     'user' => [
-      'type' => Type::string(),
+      'type' => $userType,
       'args' => [
         'id' => Type::nonNull(Type::int())
       ],
-      'resolve' => function ($root, $args) {
-        return $root['db']->getUsername($args['id']);
+      'resolve' => function ($value, $args, $root) {
+        return $root['db']->getUser($args['id']);
+      }
+    ],
+    'list' => [
+      'type' => $listType,
+      'args' => [
+        'id' => Type::nonNull(Type::int())
+      ],
+      'resolve' => function ($value, $args, $root) {
+        return [
+          'id' => $args['id'],
+          'title' => 'Test List',
+          'user' => 1
+        ];
       }
     ]
   ]
@@ -58,7 +76,7 @@ try {
   $rootValue = [
     'db' => Database::connect()
   ];
-  $result = GraphQL::executeQuery($schema, $query, $rootValue, null, $vars);
+  $result = GraphQL::executeQuery($schema, $query, null, $rootValue, $vars);
   $output = $result->toArray();
 } catch (\Exception $e) {
   $output = [

@@ -24,7 +24,7 @@ class Database {
     $this->db = $pdo;
   }
 
-  public function getUsername($userID) {
+  public function getUser($userID) {
     $stmt = $this->db->prepare(
       'SELECT *
        FROM `user`
@@ -34,7 +34,10 @@ class Database {
     $stmt->bindValue(':user_id', $userID);
     $stmt->execute();
     $result = $stmt->fetch();
-    return $result['username'];
+    return [
+      'id' => $result['user_id'],
+      'username' => $result['username']
+    ];
   }
 
 }
