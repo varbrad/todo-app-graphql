@@ -20,6 +20,15 @@ $userType = new ObjectType([
   ]
 ]);
 
+$itemType = new ObjectType([
+  'name' => 'ListItem',
+  'description' => 'A list item',
+  'fields' => [
+    'id' => Type::int(),
+    'content' => Type::string()
+  ]
+]);
+
 $listType = new ObjectType([
   'name' => 'List',
   'description' => 'A todo list',
@@ -30,6 +39,12 @@ $listType = new ObjectType([
       'type' => $userType,
       'resolve' => function ($value, $args, $root) {
         return $root['db']->getUser($value['user']);
+      }
+    ],
+    'items' => [
+      'type' => Type::listOf($itemType),
+      'resolve' => function ($value, $args, $root) {
+        return $root['db']->getListItems($value['id']);
       }
     ]
   ]
@@ -53,18 +68,50 @@ $queryType = new ObjectType([
         'id' => Type::nonNull(Type::int())
       ],
       'resolve' => function ($value, $args, $root) {
-        return [
-          'id' => $args['id'],
-          'title' => 'Test List',
-          'user' => 1
-        ];
+        return $root['db']->getList($args['id']);
+      }
+    ]
+  ]
+]);
+
+$mutationType = new ObjectType([
+  'name' => 'Mutation',
+  'fields' => [
+    'createUser' => [
+      'args' => [
+        'username' => Type::nonNull(Type::string())
+      ],
+      'type' => $userType,
+      'resolve' => function ($value, $args, $root) {
+        return $root['db']->createUser($args['username']);
+      }
+    ],
+    'createList' => [
+      'args' => [
+        'user_id' => Type::nonNull(Type::int()),
+        'title' => Type::nonNull(Type::string())
+      ],
+      'type' => $listType,
+      'resolve' => function ($value, $args, $root) {
+        return $root['db']->createList($args['user_id'], $args['title']);
+      }
+    ],
+    'addListItem' => [
+      'args' => [
+        'list_id' => Type::nonNull(Type::int()),
+        'content' => Type::nonNull(Type::string())
+      ],
+      'type' => $listType,
+      'resolve' => function ($value, $args, $root) {
+        return $root['db']->addListItem($args['list_id'], $args['content']);
       }
     ]
   ]
 ]);
 
 $schema = new Schema([
-  'query' => $queryType
+  'query' => $queryType,
+  'mutation' => $mutationType
 ]);
 
 $raw_input = file_get_contents('php://input');
