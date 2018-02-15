@@ -21,6 +21,8 @@ module.exports = {
   css: [
     '@/assets/style.scss'
   ],
+  modules: ['@nuxtjs/proxy'],
+  proxy: ['http://brad.vagrant/api/**'],
   /*
   ** Build configuration
   */
