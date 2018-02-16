@@ -7,6 +7,7 @@
       <nuxt-link class="link alt" to="/register" exact>Register</nuxt-link>
       </template>
       <template v-else>
+        <p class="username">Logged in as <b>{{ $store.state.viewer.username }}</b></p>
         <nuxt-link class="link" to="/logout" exact>Logout</nuxt-link>
       </template>
     </div>
@@ -34,6 +35,12 @@ nav {
   margin: 0;
   padding: 0;
   margin-right: auto;
+}
+
+.username {
+  font-size: 0.8rem;
+  padding: 0 1rem;
+  margin: 0;
 }
 
 .link {

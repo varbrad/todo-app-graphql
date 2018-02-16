@@ -27,6 +27,14 @@ CREATE TABLE `list_item` (
 	FOREIGN KEY (`list_id`) REFERENCES `list` (`list_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE `session` (
+	`session_id` VARCHAR(16) NOT NULL,
+	`user_id` INT(11) NOT NULL,
+	`expiry` TIMESTAMP NOT NULL,
+	PRIMARY KEY (`session_id`),
+	FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
 # DROP USER 'sceqicla_todo'@'localhost';
 CREATE USER 'sceqicla_todo'@'localhost';
 UPDATE mysql.user SET Password=PASSWORD('password') WHERE User='sceqicla_todo' AND Host='localhost';

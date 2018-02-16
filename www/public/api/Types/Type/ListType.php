@@ -15,19 +15,7 @@ class ListType extends ObjectType
       'description' => 'A todo list',
       'fields' => [
         'id' => Type::id(),
-        'title' => Type::string(),
-        'user' => [
-          'type' => Types::user(),
-          'resolve' => function ($value, $args, $root) {
-            return $root['db']->getUser($value['user']);
-          }
-        ],
-        'items' => [
-          'type' => Type::listOf(Types::list_item()),
-          'resolve' => function ($value, $args, $root) {
-            return $root['db']->getListItems($value['id']);
-          }
-        ]
+        'title' => Type::string()
       ]
     ]);
   }

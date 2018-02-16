@@ -5,6 +5,8 @@ namespace API\Types\Type;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
+use API\Types\Types;
+
 class QueryType extends ObjectType
 {
   public function __construct()
@@ -12,39 +14,14 @@ class QueryType extends ObjectType
     parent::__construct([
       'description' => 'The query root of the todo-app GraphQL interface.',
       'fields' => [
-        'sessionId' => [
-          'type' => Type::id(),
+        'viewer' => [
+          'type' => Types::user(),
           'resolve' => function ($value, $args, $root) {
-            return $root['session_id'];
+            if ($root['session_id'] === null) return null;
+            return $root['db']->viewer($root['session_id']);
           }
         ]
       ]
     ]);
   }
 }
-
-/*
-$queryType = new ObjectType([
-  'name' => 'Query',
-  'fields' => [
-    'user' => [
-      'type' => Types::user(),
-      'args' => [
-        'id' => Type::nonNull(Type::int())
-      ],
-      'resolve' => function ($value, $args, $root) {
-        return $root['db']->getUser($args['id']);
-      }
-    ],
-    'list' => [
-      'type' => Types::list(),
-      'args' => [
-        'id' => Type::nonNull(Type::int())
-      ],
-      'resolve' => function ($value, $args, $root) {
-        return $root['db']->getList($args['id']);
-      }
-    ]
-  ]
-]);
- */

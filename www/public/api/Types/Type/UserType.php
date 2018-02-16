@@ -4,6 +4,7 @@ namespace API\Types\Type;
 
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+use API\Types\Types;
 
 class UserType extends ObjectType
 {
@@ -13,7 +14,13 @@ class UserType extends ObjectType
       'description' => 'A user',
       'fields' => [
         'id' => Type::id(),
-        'username' => Type::string()
+        'username' => Type::string(),
+        'lists' => [
+          'type' => Type::listOf(Types::list()),
+          'resolve' => function ($value, $args, $root) {
+            return $root['db']->getUserLists($value['id']);
+          }
+        ]
       ]
     ]);
   }
