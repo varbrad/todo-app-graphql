@@ -15,12 +15,14 @@
 </template>
 
 <style lang="scss" scoped>
+@import '../assets/vars';
+
 nav {
   width: 100%;
-  background: rgb(173, 8, 35);
+  background: $primary;
   overflow: hidden;
-  color: white;
-  padding: 0.25rem;
+  color: $light;
+  padding: 0.5rem;
 
   > .mwc {
     display: flex;
@@ -29,12 +31,14 @@ nav {
 }
 
 .title {
-  color: white;
-  font-size: 0.8rem;
-  font-weight: bold;
+  color: $light;
+  font-size: 1rem;
+  font-weight: 700;
   margin: 0;
-  padding: 0;
+  padding: 0.2rem 0.4rem;
   margin-right: auto;
+  border-radius: 5px;
+  color: $secondary;
 }
 
 .username {
@@ -44,18 +48,18 @@ nav {
 }
 
 .link {
-  color: white;
-  border: 2px solid white;
+  color: $light;
+  border: 2px solid $light;
   font-size: 0.8rem;
   padding: 0.25rem 0.5rem;
-  margin-left: 0.25rem;
+  margin-left: 0.5rem;
   border-radius: 3px;
   text-decoration: none;
   font-weight: bold;
 
   &.alt {
-    background-color: white;
-    color: rgb(173, 8, 35);
+    background-color: $light;
+    color: $primary;
   }
 }
 </style>

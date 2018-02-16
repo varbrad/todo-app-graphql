@@ -12,16 +12,18 @@ class UserType extends ObjectType
   {
     parent::__construct([
       'description' => 'A user',
-      'fields' => [
-        'id' => Type::id(),
-        'username' => Type::string(),
-        'lists' => [
-          'type' => Type::listOf(Types::list()),
-          'resolve' => function ($value, $args, $root) {
-            return $root['db']->getUserLists($value['id']);
-          }
-        ]
-      ]
+      'fields' => function () {
+        return [
+          'id' => Type::id(),
+          'username' => Type::string(),
+          'lists' => [
+            'type' => Type::listOf(Types::list()),
+            'resolve' => function ($value, $args, $root) {
+              return $root['db']->getUserLists($value['id']);
+            }
+          ]
+        ];
+      }
     ]);
   }
 }

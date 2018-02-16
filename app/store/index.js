@@ -16,7 +16,6 @@ const createStore = () => {
       },
       resetAuth(state) {
         state.viewer = null;
-        state.authAttempted = false;
       }
     }
   })

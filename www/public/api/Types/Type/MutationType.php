@@ -24,6 +24,12 @@ class MutationType extends ObjectType
             if (empty($args['persistent'])) $args['persistent'] = false;
             return $root['db']->authenticate($args['username'], $args['password'], $args['persistent']);
           }
+        ],
+        'logout' => [
+          'type' => Type::boolean(),
+          'resolve' => function ($value, $args, $root) {
+            return $root['db']->logout($root['session_id']);
+          }
         ]
       ]
     ]);

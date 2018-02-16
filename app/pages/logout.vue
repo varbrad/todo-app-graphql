@@ -7,10 +7,17 @@
 </template>
 
 <script>
+import { query } from '@/assets/api';
+
 export default {
   methods: {
-    logout() {
+    async logout() {
       // TODO: Fire request to server
+      let r = await query(`
+        mutation {
+          logout
+        }
+      `);
       // Commit logout to store
       this.$store.commit('resetAuth');
       // Redirect to login page

@@ -9,6 +9,7 @@
 import AppNav from '@/components/AppNav';
 
 export default {
+  middleware: 'try-auth',
   components: {
     AppNav
   }

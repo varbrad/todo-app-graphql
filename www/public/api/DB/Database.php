@@ -53,6 +53,20 @@ class Database
     return $user;
   }
 
+  public function logout($session_id)
+  {
+    $stmt = $this->db->prepare(
+      'DELETE FROM `session`
+       WHERE `session_id` = :session_id;'
+    );
+    $stmt->bindValue(':session_id', $session_id);
+    $stmt->execute();
+    // Delete the cookie
+    setcookie('session_id', '', time() - 1, '/', '', false, true);
+    // return true
+    return true;
+  }
+
   private function createSession($user_id, $persistent)
   {
     $session_id = Rand::chars(16);
@@ -173,7 +187,7 @@ class Database
   public function getListItems($list_id)
   {
     $stmt = $this->db->prepare(
-      'SELECT `list_item_id` AS `id`, `content`
+      'SELECT `list_item_id` AS `id`, `list_id` AS `list`, `content`
        FROM `list_item`
        WHERE `list_id` = :list_id'
     );
