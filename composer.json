@@ -13,5 +13,10 @@
     },
     "config": {
         "vendor-dir": "www/public/vendor"
+    },
+    "autoload": {
+        "psr-4": {
+            "API\\": "www/public/api"
+        }
     }
 }

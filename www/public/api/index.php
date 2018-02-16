@@ -1,8 +1,9 @@
 <?php
 
-require_once '../vendor/autoload.php';
+namespace API;
 
-require_once 'DB/Database.php';
+// GraphQL and deps
+require_once '../vendor/autoload.php';
 
 use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
@@ -13,7 +14,6 @@ use API\DB\Database;
 
 $userType = new ObjectType([
   'name' => 'User',
-  'description' => 'A user',
   'fields' => [
     'id' => Type::int(),
     'username' => Type::string()

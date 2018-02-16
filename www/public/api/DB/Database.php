@@ -2,9 +2,8 @@
 
 namespace API\DB;
 
-require_once 'SafeException.php';
-
 use \PDO;
+use API\DB\SafeException;
 
 class Database
 {
