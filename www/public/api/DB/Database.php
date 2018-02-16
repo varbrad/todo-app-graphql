@@ -2,6 +2,8 @@
 
 namespace API\DB;
 
+require_once 'SafeException.php';
+
 use \PDO;
 
 class Database
@@ -27,6 +29,28 @@ class Database
     $this->db = $pdo;
   }
 
+  public function authenticate($username, $password)
+  {
+    $stmt = $this->db->prepare(
+      'SELECT `user_id` AS `id`, `username`, `password`
+       FROM `user`
+       WHERE `username` = :username
+       LIMIT 1;'
+    );
+    $stmt->bindValue(':username', $username);
+    $stmt->execute();
+    $user = $stmt->fetch();
+    // If no user found, throw err
+    if (empty($user)) throw new SafeException('Invalid username');
+    // If password wrong, throw err
+    if (!password_verify($password, $user['password'])) throw new SafeException('Invalid password');
+    // Everything ok
+    // Remove the password from the returned object
+    unset($user['password']);
+    // Return the object
+    return $user;
+  }
+
   public function getUser($userID)
   {
     $stmt = $this->db->prepare(
@@ -44,13 +68,15 @@ class Database
     ];
   }
 
-  public function createUser($username)
+  public function createUser($username, $password)
   {
+    $hash = password_hash($password, PASSWORD_BCRYPT);
     $stmt = $this->db->prepare(
-      'INSERT INTO `user` (`username`)
-       VALUES (:username);'
+      'INSERT INTO `user` (`username`, `password`)
+       VALUES (:username, :hash);'
     );
     $stmt->bindValue(':username', $username);
+    $stmt->bindValue(':hash', $hash);
     $stmt->execute();
     $id = $this->db->lastInsertId();
     return [

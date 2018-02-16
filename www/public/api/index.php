@@ -77,13 +77,26 @@ $queryType = new ObjectType([
 $mutationType = new ObjectType([
   'name' => 'Mutation',
   'fields' => [
-    'createUser' => [
+    'authenticate' => [
       'args' => [
-        'username' => Type::nonNull(Type::string())
+        'username' => Type::nonNull(Type::string()),
+        'password' => Type::nonNull(Type::string())
       ],
       'type' => $userType,
       'resolve' => function ($value, $args, $root) {
-        return $root['db']->createUser($args['username']);
+        $result = $root['db']->authenticate($args['username'], $args['password']);
+        setcookie('test-cookie-set', 'asdokaosdk', time() + 60 * 60 * 24 * 14, '/', '', false, true);
+        return $result;
+      }
+    ],
+    'createUser' => [
+      'args' => [
+        'username' => Type::nonNull(Type::string()),
+        'password' => Type::nonNull(Type::string())
+      ],
+      'type' => $userType,
+      'resolve' => function ($value, $args, $root) {
+        return $root['db']->createUser($args['username'], $args['password']);
       }
     ],
     'createList' => [
