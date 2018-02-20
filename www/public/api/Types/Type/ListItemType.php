@@ -16,6 +16,7 @@ class ListItemType extends ObjectType
         return [
           'id' => Type::id(),
           'content' => Type::string(),
+          'completed' => Type::boolean(),
           'list' => [
             'type' => Types::list(),
             'resolve' => function ($value, $args, $root) {

@@ -17,8 +17,16 @@ class QueryType extends ObjectType
         'viewer' => [
           'type' => Types::user(),
           'resolve' => function ($value, $args, $root) {
-            if ($root['session_id'] === null) return null;
             return $root['db']->viewer($root['session_id']);
+          }
+        ],
+        'list' => [
+          'type' => Types::list(),
+          'args' => [
+            'id' => Type::nonNull(Type::id())
+          ],
+          'resolve' => function ($value, $args, $root) {
+            return $root['db']->getList($args['id']);
           }
         ]
       ]

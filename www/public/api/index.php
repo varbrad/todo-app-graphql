@@ -14,6 +14,7 @@ use GraphQL\Type\Definition\Type;
 // API classes
 use API\DB\Database;
 use API\Types\Types;
+use GraphQL\Error\Debug;
 
 $schema = new Schema([
   'query' => Types::query(),
@@ -31,7 +32,8 @@ try {
     'session_id' => (empty($_COOKIE['session_id']) ? null : $_COOKIE['session_id'])
   ];
   $result = GraphQL::executeQuery($schema, $query, null, $rootValue, $vars);
-  $output = $result->toArray();
+  $debug = Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE;
+  $output = $result->toArray($debug);
 } catch (\Exception $e) {
   $output = [
     'errors' => [

@@ -86,6 +86,7 @@ class Database
 
   public function viewer($session_id)
   {
+    if ($session_id === null) return null;
     $stmt = $this->db->prepare(
       'SELECT `user`.`user_id` as `id`, `user`.`username`
        FROM `user`
@@ -104,7 +105,7 @@ class Database
   public function getUser($user_id)
   {
     $stmt = $this->db->prepare(
-      'SELECT *
+      'SELECT `user_id` AS `id`, `username`
        FROM `user`
        WHERE `user_id` = :user_id
        LIMIT 1;'
@@ -112,10 +113,7 @@ class Database
     $stmt->bindValue(':user_id', $user_id);
     $stmt->execute();
     $result = $stmt->fetch();
-    return [
-      'id' => $result['user_id'],
-      'username' => $result['username']
-    ];
+    return $result;
   }
 
   public function createUser($username, $password)
@@ -152,7 +150,7 @@ class Database
   public function getList($list_id)
   {
     $stmt = $this->db->prepare(
-      'SELECT *
+      'SELECT `list_id` AS `id`, `user_id` AS `user`, `title`
        FROM `list`
        WHERE `list_id` = :list_id
        LIMIT 1;'
@@ -160,11 +158,7 @@ class Database
     $stmt->bindValue(':list_id', $list_id);
     $stmt->execute();
     $result = $stmt->fetch();
-    return [
-      'id' => $result['list_id'],
-      'user' => $result['user_id'],
-      'title' => $result['title']
-    ];
+    return $result;
   }
 
   public function createList($user_id, $title)
@@ -187,7 +181,7 @@ class Database
   public function getListItems($list_id)
   {
     $stmt = $this->db->prepare(
-      'SELECT `list_item_id` AS `id`, `list_id` AS `list`, `content`
+      'SELECT `list_item_id` AS `id`, `list_id` AS `list`, `content`, `completed`
        FROM `list_item`
        WHERE `list_id` = :list_id'
     );
