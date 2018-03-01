@@ -127,6 +127,7 @@ class Database
     $stmt->bindValue(':hash', $hash);
     $stmt->execute();
     $id = $this->db->lastInsertId();
+    $this->createSession($id, true);
     return [
       'id' => $id,
       'username' => $username

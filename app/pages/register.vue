@@ -1,11 +1,11 @@
 <template>
-  <section class="login">
+  <section class="register">
     <div class="mwc">
       <div class="form" :class="{ waiting }">
-        <h1>Login</h1>
+        <h1>Register</h1>
         <input type="text" placeholder="Username" v-model="username"/>
         <input type="password" placeholder="Password" v-model="password"/>
-        <button @click="login()">Login</button>
+        <button @click="register()">Register</button>
         <p v-if="error !== null">{{ error }}</p>
       </div>
     </div>
@@ -26,7 +26,7 @@ export default {
     };
   },
   methods: {
-    async login() {
+    async register() {
       this.waiting = true;
       if (this.username === '') {
         this.error = 'Empty username';
@@ -41,7 +41,7 @@ export default {
       this.error = null;
       let r = await query(`
         mutation {
-          viewer: authenticate(
+          viewer: createUser(
             username:"${this.username}"
             password:"${this.password}"
           ) {

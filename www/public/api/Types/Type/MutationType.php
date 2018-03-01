@@ -25,6 +25,16 @@ class MutationType extends ObjectType
             return $root['db']->authenticate($args['username'], $args['password'], $args['persistent']);
           }
         ],
+        'createUser' => [
+          'type' => Types::user(),
+          'args' => [
+            'username' => Type::nonNull(Type::string()),
+            'password' => Type::nonNull(Type::string())
+          ],
+          'resolve' => function ($value, $args, $root) {
+            return $root['db']->createUser($args['username'], $args['password']);
+          }
+        ],
         'logout' => [
           'type' => Type::boolean(),
           'resolve' => function ($value, $args, $root) {

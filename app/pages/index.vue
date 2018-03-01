@@ -4,6 +4,8 @@
       <aside class="lists">
         <h1>Your Lists</h1>
         <a href="#" to="/" v-for="list in lists" :key="list.id" :class="{ active : (activeList && activeList.id === list.id) }" @click="setList(list.id)">{{ list.title }}</a>
+        <hr>
+        <button>+ Create New List</button>
       </aside>
       <section class="content">
         <template v-if="activeList">
@@ -11,6 +13,9 @@
           <p v-for="item in activeList.items" :key="item.id" :class="{ completed : item.completed }">
             {{ item.content }}
           </p>
+        </template>
+        <template v-else>
+          <h2>Select a list</h2>
         </template>
       </section>
     </div>
@@ -66,6 +71,8 @@ export default {
   align-items: flex-start;
 
   > .lists {
+    display: flex;
+    flex-direction: column;
     border: 1px solid $primary;
     flex: 20;
     margin-right: 1rem;
@@ -98,6 +105,27 @@ export default {
         background-color: rgba($dark, 0.05);
       }
     }
+
+    > hr {
+      margin: 0.5rem 0;
+      padding: 0;
+    }
+
+    > button {
+      margin: 0 0.5rem 0.5rem 0.5rem;
+      border-radius: 5px;
+      background: $primary;
+      border: none;
+      color: $light;
+      padding: 0.5rem;
+      border: 2px solid $primary;
+
+      &:hover {
+        cursor: pointer;
+        color: $primary;
+        background: $secondary;
+      }
+    }
   }
 
   > .content {
@@ -118,7 +146,8 @@ export default {
       background-color: rgba($primary, 0.01);
 
       &.completed {
-        color: rgba($dark, .4);
+        color: rgba($dark, 0.4);
+        text-decoration: line-through;
       }
     }
   }
